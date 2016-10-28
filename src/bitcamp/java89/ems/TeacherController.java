@@ -109,40 +109,45 @@ public class TeacherController {
   }
 
   public void doAdd() {
-    Teacher teacher = new Teacher();
+
     //Scanner keyScan = new Scanner(System.in);
+    while (length < this.teachers.length) {
+      Teacher teacher = new Teacher();
+      System.out.print("아이디(예:hong)? ");
+      teacher.userId = this.keyScan.nextLine();
 
-    System.out.print("아이디(예:hong)? ");
-    teacher.userId = this.keyScan.nextLine();
+      System.out.print("암호(예:1234)? ");
+      teacher.password = this.keyScan.nextLine();
 
-    System.out.print("암호(예:1234)? ");
-    teacher.password = this.keyScan.nextLine();
+      System.out.print("이름(예:홍길동)? ");
+      teacher.name = this.keyScan.nextLine();
 
-    System.out.print("이름(예:홍길동)? ");
-    teacher.name = this.keyScan.nextLine();
+      System.out.print("이메일(예:hong@test.com)? ");
+      teacher.email = this.keyScan.nextLine();
 
-    System.out.print("이메일(예:hong@test.com)? ");
-    teacher.email = this.keyScan.nextLine();
+      System.out.print("전화(예:010-1111-2222)? ");
+      teacher.tel = this.keyScan.nextLine();
 
-    System.out.print("전화(예:010-1111-2222)? ");
-    teacher.tel = this.keyScan.nextLine();
+      System.out.print("나이(예:39)? ");
+      teacher.age = Integer.parseInt(this.keyScan.nextLine());
 
-    System.out.print("나이(예:39)? ");
-    teacher.age = Integer.parseInt(this.keyScan.nextLine());
+      System.out.print("담당과목(예:자바)? ");
+      teacher.subject = this.keyScan.nextLine();
 
-    System.out.print("담당과목(예:자바)? ");
-    teacher.subject = this.keyScan.nextLine();
+      System.out.print("경력(예:10)? ");
+      teacher.carrer = Integer.parseInt(this.keyScan.nextLine());
 
-    System.out.print("경력(예:10)? ");
-    teacher.carrer = Integer.parseInt(this.keyScan.nextLine());
+      System.out.print("연봉(예:8500)? ");
+      teacher.salary = Integer.parseInt(this.keyScan.nextLine());
 
-    System.out.print("연봉(예:8500)? ");
-    teacher.salary = Integer.parseInt(this.keyScan.nextLine());
+      System.out.print("주소(예:서울시 서초구 서초동)? ");
+      teacher.address = this.keyScan.nextLine();
 
-    System.out.print("주소(예:서울시 서초구 서초동)? ");
-    teacher.address = this.keyScan.nextLine();
-
-    this.teachers[length++] = teacher;
+      this.teachers[length++] = teacher;
+      System.out.print("계속 입력하시겠습니까(y/n)? ");
+      if (!this.keyScan.nextLine().equals("y"))
+        break;
+    }
   }
 
   public void doList() {
