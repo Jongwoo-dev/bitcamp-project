@@ -3,18 +3,38 @@ package bitcamp.java89.ems;
 import java.util.Scanner;
 
 public class TeacherController {
-  Teacher[] teachers = new Teacher[100];
-  int length = 0;
-  Scanner keyScan;
+  // 아래 인스턴스 변수들은 외부에서 사용할 일이 없기 때문에
+  // private으로 접근을 제한한다.
+  private Teacher[] teachers = new Teacher[100];
+  private int length = 0;
+  private Scanner keyScan;
 
-  //기본 생성자가 없다.
-  //따라서 이 클래스를 사용하려면 반드시 Scanner를 줘야 한다.
-  //=> 생성자에서 하는 일은 그 객체를 사용하기 전에 유효 상태로 만드는 것이다.
   public TeacherController(Scanner keyScan) {
     this.keyScan = keyScan;
   }
 
-  public void doUpdate() {
+  public void service() {
+    loop:
+    while (true) {
+      System.out.print("강사관리> ");
+      String command = keyScan.nextLine().toLowerCase();
+
+      switch (command) {
+      case "add": this.doAdd(); break;
+      case "list": this.doList(); break;
+      case "view": this.doView(); break;
+      case "delete": this.doDelete(); break;
+      case "update": this.doUpdate(); break;
+      case "main": break loop;
+      default:
+        System.out.println("지원하지 않는 명령어입니다.");
+      }
+    }
+  }
+
+  // 아래 doXxx() 메서드들은 오직 service()에서만 호출하기 때문에
+  // private으로 접근을 제한한다.
+  private void doUpdate() {
     System.out.print("변경할 강사의 아이디는? ");
     String userId = this.keyScan.nextLine().toLowerCase();
 
@@ -55,7 +75,6 @@ public class TeacherController {
         if (this.keyScan.nextLine().toLowerCase().equals("y")) {
           this.teachers[i] = teacher;
           System.out.println("저장하였습니다.");
-          //return;
         } else {
           System.out.println("변경을 취소하였습니다.");
         }
@@ -65,9 +84,7 @@ public class TeacherController {
     System.out.printf("%s 강사가 없습니다.\n", userId);
   }
 
-  public void doDelete() {
-    //int target = 0;
-    //Scanner keyScan = new Scanner(System.in);
+  private void doDelete() {
     System.out.print("삭제할 강사의 아이디는? ");
     String userId = this.keyScan.nextLine().toLowerCase();
 
@@ -85,7 +102,7 @@ public class TeacherController {
     System.out.printf("%s 강사가 없습니다.\n", userId);
   }
 
-  public void doView() {
+  private void doView() {
     //int target = 0;
     //Scanner keyScan = new Scanner(System.in);
     System.out.print("강사 아이디? ");
@@ -108,7 +125,7 @@ public class TeacherController {
     }
   }
 
-  public void doAdd() {
+  private void doAdd() {
 
     //Scanner keyScan = new Scanner(System.in);
     while (length < this.teachers.length) {
@@ -150,7 +167,7 @@ public class TeacherController {
     }
   }
 
-  public void doList() {
+  private void doList() {
     if (length == 0) {
       System.out.println("리스트가 존재하지 않습니다.");
     } else {
