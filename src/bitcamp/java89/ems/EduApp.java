@@ -20,6 +20,8 @@ public class EduApp {
       case "add": teacherController.doAdd(); break;
       case "list": teacherController.doList(); break;
       case "view": teacherController.doView(); break;
+      case "delete": teacherController.doDelete(); break;
+      case "update": teacherController.doUpdate(); break;
       case "quit": System.out.println("Good bye!"); break loop;
       default:
         System.out.println("지원하지 않는 명령어입니다.");

@@ -14,8 +14,79 @@ public class TeacherController {
     this.keyScan = keyScan;
   }
 
+  public void doUpdate() {
+    System.out.print("변경할 강사의 아이디는? ");
+    String userId = this.keyScan.nextLine().toLowerCase();
+
+    for (int i = 0; i < this.length; i++) {
+      if (this.teachers[i].userId.toLowerCase().equals(userId)) {
+        Teacher teacher = new Teacher();
+
+        teacher.userId = this.teachers[i].userId;
+
+        System.out.print("암호(예:1234)? ");
+        teacher.password = this.keyScan.nextLine();
+
+        System.out.print("이름(예:홍길동)? ");
+        teacher.name = this.keyScan.nextLine();
+
+        System.out.print("이메일(예:hong@test.com)? ");
+        teacher.email = this.keyScan.nextLine();
+
+        System.out.print("전화(예:010-1111-2222)? ");
+        teacher.tel = this.keyScan.nextLine();
+
+        System.out.print("나이(예:39)? ");
+        teacher.age = Integer.parseInt(this.keyScan.nextLine());
+
+        System.out.print("담당과목(예:자바)? ");
+        teacher.subject = this.keyScan.nextLine();
+
+        System.out.print("경력(예:10)? ");
+        teacher.carrer = Integer.parseInt(this.keyScan.nextLine());
+
+        System.out.print("연봉(예:8500)? ");
+        teacher.salary = Integer.parseInt(this.keyScan.nextLine());
+
+        System.out.print("주소(예:서울시 서초구 서초동)? ");
+        teacher.address = this.keyScan.nextLine();
+
+        System.out.print("저장하시겠습니까(y/n)? ");
+        if (this.keyScan.nextLine().toLowerCase().equals("y")) {
+          this.teachers[i] = teacher;
+          System.out.println("저장하였습니다.");
+          //return;
+        } else {
+          System.out.println("변경을 취소하였습니다.");
+        }
+        return;
+      }
+    }
+    System.out.printf("%s 강사가 없습니다.\n", userId);
+  }
+
+  public void doDelete() {
+    //int target = 0;
+    //Scanner keyScan = new Scanner(System.in);
+    System.out.print("삭제할 강사의 아이디는? ");
+    String userId = this.keyScan.nextLine().toLowerCase();
+
+    for (int i = 0; i < this.length; i++) {
+      if (this.teachers[i].userId.toLowerCase().equals(userId)) {
+        //배열의 앞 항목의 값을 현재 항목으로 당겨온다.
+        for (int x = i + 1; x < this.length; x++, i++) {
+          this.teachers[i] = this.teachers[x];
+        }
+        this.teachers[--length] = null;
+        System.out.printf("%s 강사 정보를 삭제하였습니다.\n", userId);
+        return;
+      }
+    }
+    System.out.printf("%s 강사가 없습니다.\n", userId);
+  }
+
   public void doView() {
-    int target = 0;
+    //int target = 0;
     //Scanner keyScan = new Scanner(System.in);
     System.out.print("강사 아이디? ");
     String viewId = this.keyScan.nextLine().toLowerCase();
