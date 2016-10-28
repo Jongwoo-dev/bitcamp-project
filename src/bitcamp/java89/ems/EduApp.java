@@ -9,48 +9,67 @@ public class EduApp {
 
     Scanner keyScan = new Scanner(System.in);
 
-    Teacher teacher = new Teacher();
-    System.out.print("아이디(예:hong)? ");
-    teacher.userId = keyScan.nextLine();
+    Teacher[] teachers = new Teacher[100];
+    int length = 0;
 
-    System.out.print("암호(예:1234)? ");
-    teacher.password = keyScan.nextLine();
+    while (length < teachers.length) {
+      Teacher teacher = new Teacher();
+      System.out.print("아이디(예:hong)? ");
+      teacher.userId = keyScan.nextLine();
 
-    System.out.print("이름(예:홍길동)? ");
-    teacher.name = keyScan.nextLine();
+      System.out.print("암호(예:1234)? ");
+      teacher.password = keyScan.nextLine();
 
-    System.out.print("이메일(예:hong@test.com)? ");
-    teacher.email = keyScan.nextLine();
+      System.out.print("이름(예:홍길동)? ");
+      teacher.name = keyScan.nextLine();
 
-    System.out.print("전화(예:010-1111-2222)? ");
-    teacher.tel = keyScan.nextLine();
+      System.out.print("이메일(예:hong@test.com)? ");
+      teacher.email = keyScan.nextLine();
 
-    System.out.print("나이(예:39)? ");
-    teacher.age = Integer.parseInt(keyScan.nextLine());
+      System.out.print("전화(예:010-1111-2222)? ");
+      teacher.tel = keyScan.nextLine();
 
-    System.out.print("담당과목(예:자바)? ");
-    teacher.subject = keyScan.nextLine();
+      System.out.print("나이(예:39)? ");
+      teacher.age = Integer.parseInt(keyScan.nextLine());
 
-    System.out.print("경력(예:10)? ");
-    teacher.carrer = Integer.parseInt(keyScan.nextLine());
+      System.out.print("담당과목(예:자바)? ");
+      teacher.subject = keyScan.nextLine();
 
-    System.out.print("연봉(예:8500)? ");
-    teacher.salary = Integer.parseInt(keyScan.nextLine());
+      System.out.print("경력(예:10)? ");
+      teacher.carrer = Integer.parseInt(keyScan.nextLine());
 
-    System.out.print("주소(예:서울시 서초구 서초동)? ");
-    teacher.address = keyScan.nextLine();
+      System.out.print("연봉(예:8500)? ");
+      teacher.salary = Integer.parseInt(keyScan.nextLine());
 
+      System.out.print("주소(예:서울시 서초구 서초동)? ");
+      teacher.address = keyScan.nextLine();
 
-    System.out.printf("아이디: %s\n", teacher.userId);
-    System.out.printf("암호: %s\n", teacher.password);
-    System.out.printf("이름: %s\n", teacher.name);
-    System.out.printf("이메일: %s\n", teacher.email);
-    System.out.printf("전화: %s\n", teacher.tel);
-    System.out.printf("나이: %d\n", teacher.age);
-    System.out.printf("담당과목: %s\n", teacher.subject);
-    System.out.printf("경력: %d\n", teacher.carrer);
-    System.out.printf("연봉: %d\n", teacher.salary);
-    System.out.printf("주소: %s\n", teacher.address);
+      teachers[length++] = teacher;
 
+      System.out.print("계속 입력하시겠습니까(y/n)? ");
+      if (!keyScan.nextLine().equals("y"))
+        break;
+    }
+
+    printTeacherList(teachers, length);
+
+  }
+
+  static void printTeacherList(Teacher[] teachers, int length) {
+    Teacher teacher;
+    for (int i = 0; i < length; i++) {
+      teacher = teachers[i];
+      System.out.printf("%s, %s, %s, %s, %s, %d, %s, %d, %d, %s\n",
+        teacher.userId,
+        teacher.password,
+        teacher.name,
+        teacher.email,
+        teacher.tel,
+        teacher.age,
+        teacher.subject,
+        teacher.carrer,
+        teacher.salary,
+        teacher.address);
+    }
   }
 }
