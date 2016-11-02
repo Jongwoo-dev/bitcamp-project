@@ -1,3 +1,41 @@
+[v0.9]
+구현할 기능:
+=> LinkedList 클래스를 만든다
+=> LinkedList를 StudentController에 적용한다.
+
+
+산출물:
+=> Teacher.java
+=> EduApp.java
+=> xxxController.java (변경)
+=> Box.java (삭제)
+=> LinkedList.java (추가)
+
+학습목표:
+=> LinkedList를 만들 수 있다.
+=> LinkedList를 사용하여 데이터를 저장, 조회, 변경, 삭제할 수 있다.
+
+
+
+
+[v0.8]
+구현할 기능:
+=> Linked List 기법을 이용하여 학생, 강사 등의 데이터를 관리한다.
+
+
+산출물:
+=> Teacher.java
+=> EduApp.java
+=> xxxController.java (변경)
+=> Box.java (추가)
+
+학습목표:
+=> Linked List의 사용법을 익힌다.
+=> Linked List를 구현하고 프로젝트에 적용할 수 있다.
+
+
+
+
 [v0.7]
 구현할 기능:
 => EduApp에 있던 학생관리 명령어 처리를
