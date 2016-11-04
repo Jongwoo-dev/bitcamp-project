@@ -6,10 +6,10 @@ public class TeacherController {
   // 아래 인스턴스 변수들은 외부에서 사용할 일이 없기 때문에
   // private으로 접근을 제한한다.
   private Scanner keyScan;
-  private LinkedList list;
+  private LinkedList<Teacher> list;
 
   public TeacherController(Scanner keyScan) {
-    list = new LinkedList();
+    list = new LinkedList<Teacher>();
     this.keyScan = keyScan;
   }
 
@@ -43,7 +43,7 @@ public class TeacherController {
       return;
     }
 
-    Teacher oldTeacher = (Teacher)list.get(index);
+    Teacher oldTeacher = list.get(index);
 
     //새 강사 정보를 입력받는다.
     Teacher teacher = new Teacher();
@@ -94,7 +94,7 @@ public class TeacherController {
       return;
     }
 
-    Teacher deletedTeacher = (Teacher)list.remove(index);
+    Teacher deletedTeacher = list.remove(index);
 
     System.out.printf("%s 강사 정보를 삭제하였습니다.\n", deletedTeacher.userId);
   }
@@ -108,7 +108,7 @@ public class TeacherController {
       return;
     }
 
-    Teacher teacher = (Teacher)list.get(index);
+    Teacher teacher = list.get(index);
 
     System.out.printf("아이디: %s\n", teacher.userId);
     System.out.printf("암호: (***)\n");
@@ -169,7 +169,7 @@ public class TeacherController {
       System.out.println("리스트가 존재하지 않습니다.");
     } else {
       for (int i = 0; i < list.size(); i++) {
-        Teacher teacher = (Teacher)list.get(i);
+        Teacher teacher = list.get(i);
         System.out.printf("%s, %s, %s, %s, %s, %d, %s, %d, %d, %s\n",
           teacher.userId,
           teacher.password,
