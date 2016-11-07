@@ -1,3 +1,19 @@
+[v1.2]
+구현할 기능:
+=> 우리가 만든 LinkedList 대신 자바에서 제공하는 ArrayList 사용하여 데이터 목록을 다룬다.
+
+산출물:
+=> Teacher.java
+=> EduApp.java
+=> xxxController.java (변경)
+=> LinkedList.java (제거)
+
+학습목표:
+=> 자바에서 제공하는 ArrayList를 사용할 수 있다.
+
+
+
+
 [v1.1]
 구현할 기능:
 => Linkedlist에 예외처리 코드 추가
@@ -19,7 +35,7 @@
 
 [v1.0]
 구현할 기능:
-=> LinkedList에 제네릭을 적용한다.
+=> LinkedList에 제네릭을 적용한다.ㄱ
 => LinkedList를 사용하는 모든 코드에서 타입 캐스팅을 제거한다.
 
 산출물:
