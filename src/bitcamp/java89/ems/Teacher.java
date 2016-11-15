@@ -1,6 +1,9 @@
 package bitcamp.java89.ems;
 
-public class Teacher {
+import java.io.Serializable;
+
+public class Teacher implements Serializable {
+  private static final long serialVersionUID = 1L;
   //인스턴스 변수
   String userId;
   String password;

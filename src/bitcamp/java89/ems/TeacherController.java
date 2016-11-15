@@ -1,18 +1,76 @@
-/* 작업내용
-- LinkedList를 ArrayList로 교체한다.
+/* 작업내용 : 저장 기능 추가
+- changed 변수 추가
+- isChanged 메서드 추가.
+- save 메서드 추가.
 */
 package bitcamp.java89.ems;
 
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.FileOutputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.DataInputStream;
+import java.io.EOFException;
+
+import java.io.File;
+import java.io.PrintStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 
 public class TeacherController {
-  private Scanner keyScan;
+  private String filename = "teacher.data";
   private ArrayList<Teacher> list;
+  private boolean changed;
+  private Scanner keyScan;
 
-  public TeacherController(Scanner keyScan) {
+  public TeacherController(Scanner keyScan) throws Exception {
     list = new ArrayList<Teacher>();
     this.keyScan = keyScan;
+    
+    this.load();  // 기존의 데이터 파일을 읽어서 ArrayList에 학생 정보를 로딩한다. 
+  }
+
+  public boolean isChanged() {
+    return changed;
+  }
+
+  private void load() {
+    //파일에서 정보 읽어오는 메소드
+    FileInputStream in0 = null;
+    ObjectInputStream in = null;
+    try {
+      in0 = new FileInputStream(this.filename);
+      in = new ObjectInputStream(in0);
+      list = (ArrayList<Teacher>)in.readObject();
+    } catch (EOFException e) {
+      // 파일을 모두 읽었다.
+    } catch (Exception e) {
+      System.out.println("강사 데이터 로딩 중 오류 발생!");
+    } finally {
+      try {
+        in.close();
+        in0.close();
+      } catch (Exception e) {
+        // close하다가 예외 발생하면 무시한다.
+      }
+    }
+  }
+
+  public void save() throws Exception {
+    // 파일에 저장한다.
+    FileOutputStream out0 = new FileOutputStream(this.filename);
+    ObjectOutputStream out = new ObjectOutputStream(out0);
+    
+    out.writeObject(list);
+    changed = false;
+
+    out.close();
+    out0.close();
   }
 
   public void service() {
@@ -122,6 +180,7 @@ public class TeacherController {
     if (this.keyScan.nextLine().toLowerCase().equals("y")) {
       teacher.userId = oldTeacher.userId;
       list.set(index, teacher);
+      changed = true;
       System.out.println("저장하였습니다.");
     } else {
       System.out.println("변경을 취소하였습니다.");
@@ -183,6 +242,7 @@ public class TeacherController {
       teacher.address = this.keyScan.nextLine();
 
       list.add(teacher);
+      changed = true;
       
       System.out.print("계속 입력하시겠습니까(y/n)? ");
       if (!this.keyScan.nextLine().equals("y"))
@@ -212,6 +272,7 @@ public class TeacherController {
     System.out.print("삭제할 강사의 인덱스? ");
     int index = Integer.parseInt(keyScan.nextLine());
     Teacher deletedTeacher = list.remove(index);
+    changed = true;
     System.out.printf("%s 강사 정보를 삭제하였습니다.\n", deletedTeacher.userId);
   }
 }
