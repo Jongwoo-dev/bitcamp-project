@@ -1,29 +1,17 @@
-/* 작업내용 : 저장 기능 추가
-- changed 변수 추가
-- isChanged 메서드 추가.
-- save 메서드 추가.
+/* 작업내용 : 직렬화 적용
 */
 package bitcamp.java89.ems;
 
-import java.util.Scanner;
-import java.util.ArrayList;
-import java.io.FileOutputStream;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.DataInputStream;
 import java.io.EOFException;
-
-import java.io.File;
-import java.io.PrintStream;
-import java.io.InputStreamReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class TeacherController {
-  private String filename = "teacher.data";
+  private String filename = "teacher2.data";
   private ArrayList<Teacher> list;
   private boolean changed;
   private Scanner keyScan;
@@ -39,6 +27,7 @@ public class TeacherController {
     return changed;
   }
 
+  @SuppressWarnings("unchecked")
   private void load() {
     //파일에서 정보 읽어오는 메소드
     FileInputStream in0 = null;
@@ -67,6 +56,7 @@ public class TeacherController {
     ObjectOutputStream out = new ObjectOutputStream(out0);
     
     out.writeObject(list);
+    
     changed = false;
 
     out.close();
