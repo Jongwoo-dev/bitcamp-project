@@ -8,6 +8,7 @@ public class EduApp {
   static ClassroomController classroomController;
   static TextBookController textBookController;
   static StudentController studentController;
+  static ContactController contactController;
 
   public static void main(String[] args) throws Exception {
     //EduApp에서 사용하는 keyScan을 StudentController와 공유한다.
@@ -15,6 +16,7 @@ public class EduApp {
     classroomController = new ClassroomController(keyScan);
     textBookController = new TextBookController(keyScan);
     studentController = new StudentController(keyScan);
+    contactController = new ContactController(keyScan);
 
     System.out.println("비트캠프 관리시스템에 오신걸 환영합니다.");
 
@@ -29,6 +31,7 @@ public class EduApp {
       case "go 2": teacherController.service(); break;
       case "go 3": classroomController.service(); break;
       case "go 4": textBookController.service(); break;
+      case "go 5": contactController.service(); break;
       case "save": doSave(); break;
       case "quit": 
         if (doQuit())
@@ -46,7 +49,11 @@ public class EduApp {
     System.out.println("2. 강사관리");
     System.out.println("3. 강의실관리");
     System.out.println("4. 교재관리");
+    System.out.println("5. 연락처관리");
     System.out.println("메뉴 이동은 'go 메뉴번호'를 입력하세요.");
+    System.out.println("[명령]");
+    System.out.println("save   데이터 저장");
+    System.out.println("quit   프로그램 종료");
   }
 
   static boolean doQuit() {
