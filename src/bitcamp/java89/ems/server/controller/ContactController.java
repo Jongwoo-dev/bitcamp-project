@@ -206,17 +206,6 @@ public class ContactController {
     }
   }
 
-  private ArrayList<Contact> searchByName(String name) {
-    ArrayList<Contact> searchList = new ArrayList<>();
-    for (Contact contact : list) {
-      if (contact.getName().toLowerCase().equals(name.toLowerCase())) {
-        searchList.add(contact);
-      }
-    }
-    return searchList;
-  }
-
-
   private HashMap<String,String> commandSplit(String params) {
     String[] values = params.split("&");
     HashMap<String,String> paramMap = new HashMap<>();
