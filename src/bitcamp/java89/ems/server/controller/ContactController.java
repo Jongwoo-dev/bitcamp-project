@@ -5,20 +5,24 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import bitcamp.java89.ems.server.vo.Contact;
 
 public class ContactController {
-  private String filename = "contactv1.5.data";
+  private Scanner in;
+  private PrintStream out;
+  private String filename = "contact-v1.6.data";
   private ArrayList<Contact> list;
   private boolean changed;
-  private Scanner keyScan;
 
-  public ContactController(Scanner keyScan) throws Exception {
+  public ContactController(Scanner in, PrintStream out) throws Exception {
     list = new ArrayList<Contact>();
-    this.keyScan = keyScan;
+    this.in = in;
+    this.out = out;
     
     this.load();  // 기존의 데이터 파일을 읽어서 ArrayList에 학생 정보를 로딩한다. 
   }
@@ -39,7 +43,7 @@ public class ContactController {
     } catch (EOFException e) {
       // 파일을 모두 읽었다.
     } catch (Exception e) {
-      System.out.println("데이터 로딩 중 오류 발생!");
+      out.println("데이터 로딩 중 오류 발생!");
     } finally {
       try {
         in.close();
@@ -65,24 +69,28 @@ public class ContactController {
   public void service() {
     loop:
     while (true) {
-      System.out.print("연락처관리> ");
-      String command = keyScan.nextLine().toLowerCase();
+      // 클라이언트로 데이터 출력
+      out.println("연락처관리> ");
+      out.println();  // 보내는 데이터의 끝을 의미
+      
+      // 클라이언트가 보낸 데이터 읽기
+      String[] commands = in.nextLine().split("\\?");
 
       try {
-        switch (command) {
-        case "add": this.doAdd(); break;
+        switch (commands[0]) {
+        case "add": this.doAdd(commands[1]); break;
         case "list": this.doList(); break;
-        case "view": this.doView(); break;
-        case "delete": this.doDelete(); break;
-        //case "update": this.doUpdate(); break;
+        case "view": this.doView(commands[1]); break;
+        case "delete": this.doDelete(commands[1]); break;
+        case "update": this.doUpdate(commands[1]); break;
         case "main": break loop;
         default:
-          System.out.println("지원하지 않는 명령어입니다.");
+          out.println("지원하지 않는 명령어입니다.");
         }
       } catch (IndexOutOfBoundsException e) {
-        System.out.println("인덱스가 유효하지 않습니다.");
+        out.println("인덱스가 유효하지 않습니다.");
       } catch (Exception e) {
-        System.out.println("실행 중 오류가 발생했습니다.");
+        out.println("실행 중 오류가 발생했습니다.");
         e.printStackTrace();
       } // try
     } // while
@@ -92,119 +100,65 @@ public class ContactController {
   // 아래 doXxx() 메서드들은 오직 service()에서만 호출하기 때문에
   // private으로 접근을 제한한다.
   private void doList() {
-    if (list.size() == 0) {
-      System.out.println("리스트가 존재하지 않습니다.");
-    } else {
-      for (Contact contact : list) {
-        System.out.printf("%s, %s, %s, %s\n",
+    for (Contact contact : list) {
+      out.printf("%s, %s, %s, %s\n",
           contact.getName(),
           contact.getPosition(),
           contact.getTel(),
           contact.getEmail());
+    }
+  }
+
+
+  // 클라이언트에서 보낸 데이터 형식
+  // update?name=홍길동&position=대리&tel=111-1111&email=hong@test.com
+  // update("name=홍길동&position=대리&tel=111-1111&email=hong@test.com");
+  // 이메일이 일치하는 사용자를 찾아 나머지 항목의 값을 변경한다.
+  // 단 이메일은 변경할 수 없다.
+  private void doUpdate(String params) {
+    HashMap<String,String> paramMap = commandSplit(params);
+    
+    if (!existEmail(paramMap.get("email"))) {
+      out.println("해당하는 이메일이 존재하지 않습니다. 업데이트를 취소합니다.");
+      return;
+    }
+
+    Contact newContact = new Contact();
+    newContact.setName(paramMap.get("name"));
+    newContact.setPosition(paramMap.get("position"));
+    newContact.setTel(paramMap.get("tel"));
+    newContact.setEmail(paramMap.get("email"));
+    
+    for (int i = 0; i < list.size(); i++) {
+      Contact contact = list.get(i);
+      if (contact.getEmail().equals(paramMap.get("email"))) {
+        list.set(i, newContact);
+        out.println("업데이트를 완료하였습니다.");
       }
     }
   }
-/*
-  private void doUpdate() {
-    System.out.print("변경할 강사의 인덱스? ");
-    int index = Integer.parseInt(this.keyScan.nextLine());
 
-    Contact oldContact = list.get(index);
+  
+  // 클라이언트에서 보낸 데이터 형식
+  // add?name=홍길동&position=대리&tel=111-1111&email=hong@test.com
+  // doAdd("name=홍길동&position=대리&tel=111-1111&email=hong@test.com");
+  private void doAdd(String params) {
+    HashMap<String,String> paramMap = commandSplit(params);
 
-    //새 강사 정보를 입력받는다.
     Contact contact = new Contact();
-    System.out.print("암호(예:1234)? ");
-    contact.password = this.keyScan.nextLine();
+    contact.setName(paramMap.get("name"));
+    contact.setPosition(paramMap.get("position"));
+    contact.setTel(paramMap.get("tel"));
+    contact.setEmail(paramMap.get("email"));
 
-    System.out.printf("이름(%s)? ", oldContact.name);
-    contact.name = this.keyScan.nextLine();
-
-    System.out.printf("이메일(%s)? ", oldContact.email);
-    contact.email = this.keyScan.nextLine();
-
-    System.out.printf("전화(%s)? ", oldContact.tel);
-    contact.tel = this.keyScan.nextLine();
-
-    while (true) {
-      try {
-        System.out.printf("나이(%d)? ", oldContact.age);
-        contact.age = Integer.parseInt(this.keyScan.nextLine());
-        break;
-      } catch (Exception e) {
-        System.out.println("정수 값을 입력하세요.");
-      }
+    if (existEmail(contact.getEmail())) {
+      out.println("같은 이메일이 존재합니다. 등록을 취소합니다.");
+      return;
     }
 
-    System.out.printf("담당과목(%s)? ", oldContact.subject);
-    contact.subject = this.keyScan.nextLine();
-
-    while (true) {
-      try {
-        System.out.printf("경력(%d)? ", oldContact.carrer);
-        contact.carrer = Integer.parseInt(this.keyScan.nextLine());
-        break;
-      } catch (Exception e) {
-        System.out.println("정수 값을 입력하세요.");
-      }
-    }
-
-    while (true) {
-      try {
-        System.out.printf("연봉(%d)? ", oldContact.salary);
-        contact.salary = Integer.parseInt(this.keyScan.nextLine());
-        break;
-      } catch (Exception e) {
-        System.out.println("정수 값을 입력하세요.");
-      }
-    }
-
-    System.out.printf("주소(%s)? ", oldContact.address);
-    contact.address = this.keyScan.nextLine();
-
-    System.out.printf("저장하시겠습니까(y/n)? ");
-    if (this.keyScan.nextLine().toLowerCase().equals("y")) {
-      contact.userId = oldContact.userId;
-      list.set(index, contact);
-      changed = true;
-      System.out.println("저장하였습니다.");
-    } else {
-      System.out.println("변경을 취소하였습니다.");
-    }
-  }
-*/
-  private void doAdd() {
-    while (true) {
-      Contact contact = new Contact();
-      System.out.print("이름(예:홍길동)? ");
-      contact.setName(this.keyScan.nextLine());
-      
-      System.out.print("직위(예:대리)? ");
-      contact.setPosition(this.keyScan.nextLine());
-
-      System.out.print("전화(예:010-1111-2222)? ");
-      contact.setTel(this.keyScan.nextLine());
-      
-      System.out.print("이메일(예:hong@test.com)? ");
-      contact.setEmail(this.keyScan.nextLine());
-      
-      boolean save = true;
-      if (existEmail(contact.getEmail())) {
-        System.out.print("같은 이메일이 존재합니다. 저장하시겠습니까?(y/n) ");
-        if (!keyScan.nextLine().toLowerCase().equals("y")) {
-          save = false;
-          System.out.println("저장을 취소하였습니다.");
-        }
-      }
-
-      if (save) {
-        list.add(contact);
-        changed = true;
-      }
-      
-      System.out.print("계속 입력하시겠습니까(y/n)? ");
-      if (!this.keyScan.nextLine().equals("y"))
-        break;
-    } //while
+    list.add(contact);
+    changed = true;
+    out.println("등록하였습니다.");
   }
 
   private boolean existEmail(String email) {
@@ -218,45 +172,41 @@ public class ContactController {
 
 
 
-  private void doView() {
-    System.out.print("이름? ");
-    String name = this.keyScan.nextLine();
+  // 클라이언트에서 보낸 데이터 형식
+  // view?name=홍길동
+  private void doView(String params) {
+    HashMap<String,String> paramMap = commandSplit(params);
     
     for (Contact contact : list) {
-      if (contact.getName().equals(name)) {
-        System.out.println("---------------------------");
-        System.out.printf("이름: %s\n", contact.getName());
-        System.out.printf("직위: %s\n", contact.getPosition());
-        System.out.printf("전화: %s\n", contact.getTel());
-        System.out.printf("이메일: %s\n", contact.getEmail());        
+      if (contact.getName().equals(paramMap.get("name"))) {
+        out.println("---------------------------");
+        out.printf("이름: %s\n", contact.getName());
+        out.printf("직위: %s\n", contact.getPosition());
+        out.printf("전화: %s\n", contact.getTel());
+        out.printf("이메일: %s\n", contact.getEmail());        
       }
     }
   }
   
-  private void doDelete() { //마지막 버전
-    System.out.print("이름? ");
-    String name = keyScan.nextLine();
+  // 클라이언트에서 보낸 데이터 형식
+  // delete?email=hong@test.com
+  private void doDelete(String params) { //마지막 버전
+    HashMap<String,String> paramMap = commandSplit(params);
+    Contact deletedContact = null;
     
-    ArrayList<Contact> deleteList = searchByName(name);
-    
-    System.out.println("-----------------------------");
-    for (int i = 0; i < deleteList.size() ; i++) {
-      Contact contact = deleteList.get(i);
-      System.out.printf("%d. %s(%s)\n", (i + 1), contact.getName(), contact.getEmail());
-    }
-    System.out.println("-----------------------------");
-    
-    System.out.print("삭제할 연락처의 번호? ");
-    int deleteNo = Integer.parseInt(keyScan.nextLine());
-    
-    if (deleteNo < 1 || deleteNo > deleteList.size()) {
-      System.out.println("유효하지 않은 번호입니다.");
-      return;
+    for (Contact contact : list) {
+      if (contact.getEmail().equals(paramMap.get("email"))) {
+        deletedContact = contact;
+      }
     }
     
-    list.remove(deleteList.get(deleteNo - 1));
-    changed = true;
-    System.out.println("삭제하였습니다.");
+    if (deletedContact != null) {
+      list.remove(deletedContact);
+      changed = true;
+      out.println("삭제하였습니다.");      
+    } else {
+      out.println("일치하는 이메일이 존재하지 않습니다.");
+    }
   }
   
   private ArrayList<Contact> searchByName(String name) {
@@ -269,38 +219,15 @@ public class ContactController {
     return searchList;
   }
   
-  /*
-  private void doDelete() { //방법1
-    System.out.print("이름? ");
-    String name = keyScan.nextLine();
-    
-    for (int i = list.size() - 1; i >= 0; i--) {
-      if (list.get(i).getName().equals(name)) {
-        list.remove(i);
-      }
-    }
-    
-    changed = true;
-    System.out.println("삭제하였습니다.");
-  }
 
-  private void doDelete() { //방법2
-    System.out.print("이름? ");
-    String name = keyScan.nextLine();
-    
-    ArrayList<Contact> deleteList = new ArrayList<>();
-    
-    for (Contact contact : list) {
-      if (contact.getName().equals(name)) {
-        deleteList.add(contact);
-      }
+  private HashMap<String,String> commandSplit(String params) {
+    String[] values = params.split("&");
+    HashMap<String,String> paramMap = new HashMap<>();
+
+    for (String value : values) {
+      String[] kv = value.split("=");
+      paramMap.put(kv[0], kv[1]);
     }
-    
-    for (Contact contact : deleteList) {
-      list.remove(contact);
-    }
-    
-    changed = true;
-    System.out.println("삭제하였습니다.");
-  }*/
+    return paramMap;
+  }
 }

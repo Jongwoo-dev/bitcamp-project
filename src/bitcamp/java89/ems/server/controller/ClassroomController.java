@@ -1,5 +1,6 @@
 package bitcamp.java89.ems.server.controller;
 
+import java.io.PrintStream;
 import java.util.Scanner;
 
 import bitcamp.java89.ems.server.vo.Classroom;
@@ -7,12 +8,15 @@ import bitcamp.java89.ems.server.vo.Classroom;
 public class ClassroomController {
   // 아래 인스턴스 변수들은 외부에서 사용할 일이 없기 때문에
   // private로 접근을 제한한다.
+  private Scanner in;
+  private PrintStream out;
   private Classroom[] classrooms = new Classroom[100];
   private int length = 0;
   private Scanner keyScan;
 
-  public ClassroomController(Scanner keyScan) {
-    this.keyScan = keyScan;
+  public ClassroomController(Scanner in, PrintStream out) {
+    this.in = in;
+    this.out = out;
   }
 
   public void service() {

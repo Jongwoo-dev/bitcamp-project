@@ -1,4 +1,5 @@
 package bitcamp.java89.ems.server.controller;
+import java.io.PrintStream;
 import java.util.Scanner;
 
 import bitcamp.java89.ems.server.vo.TextBook;
@@ -6,14 +7,17 @@ import bitcamp.java89.ems.server.vo.TextBook;
 public class TextBookController {
   // 아래 인스턴스 변수들은 외부에서 사용할 일이 없기 때문에
   // private으로 접근을 제한한다.
+  private Scanner in;
+  private PrintStream out;
   private TextBook[] textBooks = new TextBook[100];
   private int length = 0;
   private Scanner keyScan;
 
   //기본 생성자가 없다. 따라서 이 클래스를 사용하려면 반드시 Scanner를 줘야 한다.
   // => 생성자에서 하는 일은 그 객체를 사용하기 전에 유효상태로 만드는 것이다.
-  public TextBookController(Scanner keyScan) {
-    this.keyScan = keyScan;
+  public TextBookController(Scanner in, PrintStream out) {
+    this.in = in;
+    this.out = out;
   }
 
   public void service() {
