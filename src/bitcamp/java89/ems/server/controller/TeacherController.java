@@ -1,6 +1,4 @@
-/* 작업내용 : 직렬화 적용
-*/
-package bitcamp.java89.ems;
+package bitcamp.java89.ems.server.controller;
 
 import java.io.EOFException;
 import java.io.FileInputStream;
@@ -9,6 +7,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import bitcamp.java89.ems.server.vo.Teacher;
 
 public class TeacherController {
   private String filename = "teacher2.data";
@@ -96,16 +96,16 @@ public class TeacherController {
     } else {
       for (Teacher teacher : list) {
         System.out.printf("%s, %s, %s, %s, %s, %d, %s, %d, %d, %s\n",
-          teacher.userId,
-          teacher.password,
-          teacher.name,
-          teacher.email,
-          teacher.tel,
-          teacher.age,
-          teacher.subject,
-          teacher.carrer,
-          teacher.salary,
-          teacher.address);
+          teacher.getUserId(),
+          teacher.getPassword(),
+          teacher.getName(),
+          teacher.getEmail(),
+          teacher.getTel(),
+          teacher.getAge(),
+          teacher.getSubject(),
+          teacher.getCarrer(),
+          teacher.getSalary(),
+          teacher.getAddress());
       }
     }
   }
@@ -119,34 +119,34 @@ public class TeacherController {
     //새 강사 정보를 입력받는다.
     Teacher teacher = new Teacher();
     System.out.print("암호(예:1234)? ");
-    teacher.password = this.keyScan.nextLine();
+    teacher.setPassword(this.keyScan.nextLine());
 
-    System.out.printf("이름(%s)? ", oldTeacher.name);
-    teacher.name = this.keyScan.nextLine();
+    System.out.printf("이름(%s)? ", oldTeacher.getName());
+    teacher.setName(this.keyScan.nextLine());
 
-    System.out.printf("이메일(%s)? ", oldTeacher.email);
-    teacher.email = this.keyScan.nextLine();
+    System.out.printf("이메일(%s)? ", oldTeacher.getEmail());
+    teacher.setEmail(this.keyScan.nextLine());
 
-    System.out.printf("전화(%s)? ", oldTeacher.tel);
-    teacher.tel = this.keyScan.nextLine();
+    System.out.printf("전화(%s)? ", oldTeacher.getTel());
+    teacher.setTel(this.keyScan.nextLine());
 
     while (true) {
       try {
-        System.out.printf("나이(%d)? ", oldTeacher.age);
-        teacher.age = Integer.parseInt(this.keyScan.nextLine());
+        System.out.printf("나이(%d)? ", oldTeacher.getAge());
+        teacher.setAge(Integer.parseInt(this.keyScan.nextLine()));
         break;
       } catch (Exception e) {
         System.out.println("정수 값을 입력하세요.");
       }
     }
 
-    System.out.printf("담당과목(%s)? ", oldTeacher.subject);
-    teacher.subject = this.keyScan.nextLine();
+    System.out.printf("담당과목(%s)? ", oldTeacher.getSubject());
+    teacher.setSubject(this.keyScan.nextLine());
 
     while (true) {
       try {
-        System.out.printf("경력(%d)? ", oldTeacher.carrer);
-        teacher.carrer = Integer.parseInt(this.keyScan.nextLine());
+        System.out.printf("경력(%d)? ", oldTeacher.getCarrer());
+        teacher.setCarrer(Integer.parseInt(this.keyScan.nextLine()));
         break;
       } catch (Exception e) {
         System.out.println("정수 값을 입력하세요.");
@@ -155,20 +155,20 @@ public class TeacherController {
 
     while (true) {
       try {
-        System.out.printf("연봉(%d)? ", oldTeacher.salary);
-        teacher.salary = Integer.parseInt(this.keyScan.nextLine());
+        System.out.printf("연봉(%d)? ", oldTeacher.getSalary());
+        teacher.setSalary(Integer.parseInt(this.keyScan.nextLine()));
         break;
       } catch (Exception e) {
         System.out.println("정수 값을 입력하세요.");
       }
     }
 
-    System.out.printf("주소(%s)? ", oldTeacher.address);
-    teacher.address = this.keyScan.nextLine();
+    System.out.printf("주소(%s)? ", oldTeacher.getAddress());
+    teacher.setAddress(this.keyScan.nextLine());
 
     System.out.printf("저장하시겠습니까(y/n)? ");
     if (this.keyScan.nextLine().toLowerCase().equals("y")) {
-      teacher.userId = oldTeacher.userId;
+      teacher.setUserId(oldTeacher.getUserId());
       list.set(index, teacher);
       changed = true;
       System.out.println("저장하였습니다.");
@@ -181,24 +181,24 @@ public class TeacherController {
     while (true) {
       Teacher teacher = new Teacher();
       System.out.print("아이디(예:hong)? ");
-      teacher.userId = this.keyScan.nextLine();
+      teacher.setUserId(this.keyScan.nextLine());
 
       System.out.print("암호(예:1234)? ");
-      teacher.password = this.keyScan.nextLine();
+      teacher.setPassword(this.keyScan.nextLine());
 
       System.out.print("이름(예:홍길동)? ");
-      teacher.name = this.keyScan.nextLine();
+      teacher.setName(this.keyScan.nextLine());
 
       System.out.print("이메일(예:hong@test.com)? ");
-      teacher.email = this.keyScan.nextLine();
+      teacher.setEmail(this.keyScan.nextLine());
 
       System.out.print("전화(예:010-1111-2222)? ");
-      teacher.tel = this.keyScan.nextLine();
+      teacher.setTel(this.keyScan.nextLine());
 
       while (true) {
         try {
           System.out.print("나이(예:39)? ");
-          teacher.age = Integer.parseInt(this.keyScan.nextLine());
+          teacher.setAge(Integer.parseInt(this.keyScan.nextLine()));
           break;
         } catch (Exception e) {
           System.out.println("정수 값을 입력하세요.");
@@ -206,12 +206,12 @@ public class TeacherController {
       }
 
       System.out.print("담당과목(예:자바)? ");
-      teacher.subject = this.keyScan.nextLine();
+      teacher.setSubject(this.keyScan.nextLine());
 
       while (true) {
         try {
           System.out.print("경력(예:10)? ");
-          teacher.carrer = Integer.parseInt(this.keyScan.nextLine());
+          teacher.setCarrer(Integer.parseInt(this.keyScan.nextLine()));
           break;
         } catch (Exception e) {
           System.out.println("정수 값을 입력하세요.");
@@ -221,7 +221,7 @@ public class TeacherController {
       while (true) {
         try {
           System.out.print("연봉(예:8500)? ");
-          teacher.salary = Integer.parseInt(this.keyScan.nextLine());
+          teacher.setSalary(Integer.parseInt(this.keyScan.nextLine()));
           break;
         } catch (Exception e) {
           System.out.println("정수 값을 입력하세요.");
@@ -229,7 +229,7 @@ public class TeacherController {
       }
 
       System.out.print("주소(예:서울시 서초구 서초동)? ");
-      teacher.address = this.keyScan.nextLine();
+      teacher.setAddress(this.keyScan.nextLine());
 
       list.add(teacher);
       changed = true;
@@ -246,16 +246,16 @@ public class TeacherController {
 
     Teacher teacher = list.get(index);
 
-    System.out.printf("아이디: %s\n", teacher.userId);
+    System.out.printf("아이디: %s\n", teacher.getUserId());
     System.out.printf("암호: (***)\n");
-    System.out.printf("이름: %s\n", teacher.name);
-    System.out.printf("이메일: %s\n", teacher.email);
-    System.out.printf("전화: %s\n", teacher.tel);
-    System.out.printf("나이: %d\n", teacher.age);
-    System.out.printf("담당과목: %s\n", teacher.subject);
-    System.out.printf("경력: %d\n", teacher.carrer);
-    System.out.printf("연봉: %d\n", teacher.salary);
-    System.out.printf("주소: %s\n", teacher.address);
+    System.out.printf("이름: %s\n", teacher.getName());
+    System.out.printf("이메일: %s\n", teacher.getEmail());
+    System.out.printf("전화: %s\n", teacher.getTel());
+    System.out.printf("나이: %d\n", teacher.getAge());
+    System.out.printf("담당과목: %s\n", teacher.getSubject());
+    System.out.printf("경력: %d\n", teacher.getCarrer());
+    System.out.printf("연봉: %d\n", teacher.getSalary());
+    System.out.printf("주소: %s\n", teacher.getAddress());
   }
 
   private void doDelete() {
@@ -263,6 +263,6 @@ public class TeacherController {
     int index = Integer.parseInt(keyScan.nextLine());
     Teacher deletedTeacher = list.remove(index);
     changed = true;
-    System.out.printf("%s 강사 정보를 삭제하였습니다.\n", deletedTeacher.userId);
+    System.out.printf("%s 강사 정보를 삭제하였습니다.\n", deletedTeacher.getUserId());
   }
 }

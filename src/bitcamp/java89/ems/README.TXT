@@ -1,3 +1,27 @@
+[v1.6]
+구현할 기능:
+=> 클라이언트/서버 구조로 아키텍처를 변경
+
+산출물:
+=> bitcamp/java89/ems/server 패키지 생성
+   - EduApp.java를 이 패키지로 옮긴다.
+   bitcamp/java89/ems/server/vo 패키지 생성
+   - Contact.java, Classroom.java, Student.java, TextBook.java,
+     Teacher.java를 이 패키지로 옮긴다
+   bitcamp/java89/ems/server/controller 패키지 생성
+   - ContactController.java, ClassroomController.java, StudentController.java,
+     TextBookController.java, TeacherController를 이 패키지로 옮긴다
+=> bitcamp/java89/ems/client 패키지 생성
+   - EduAppClient.java (생성)
+
+학습목표:
+=> 소캣 프로그래밍 연습
+=> 역할 별로 클래스를 나누어 패키지로 관리하는 방법 훈련
+
+
+
+
+
 [v1.5]
 구현할 기능:
 => 연락처 관리 기능
