@@ -23,7 +23,7 @@ public class ContactController {
     list = new ArrayList<Contact>();
     this.in = in;
     this.out = out;
-    
+
     this.load();  // 기존의 데이터 파일을 읽어서 ArrayList에 학생 정보를 로딩한다. 
   }
 
@@ -57,9 +57,9 @@ public class ContactController {
     // 파일에 저장한다.
     FileOutputStream out0 = new FileOutputStream(this.filename);
     ObjectOutputStream out = new ObjectOutputStream(out0);
-    
+
     out.writeObject(list);
-    
+
     changed = false;
 
     out.close();
@@ -68,35 +68,35 @@ public class ContactController {
 
   public void service() {
     loop:
-    while (true) {
-      // 클라이언트로 데이터 출력
-      out.println("연락처관리> ");
-      out.println();  // 보내는 데이터의 끝을 의미
-      
-      // 클라이언트가 보낸 데이터 읽기
-      String[] commands = in.nextLine().split("\\?");
+      while (true) {
+        // 클라이언트로 데이터 출력
+        out.println("연락처관리> ");
+        out.println();  // 보내는 데이터의 끝을 의미
 
-      try {
-        switch (commands[0]) {
-        case "add": this.doAdd(commands[1]); break;
-        case "list": this.doList(); break;
-        case "view": this.doView(commands[1]); break;
-        case "delete": this.doDelete(commands[1]); break;
-        case "update": this.doUpdate(commands[1]); break;
-        case "main": break loop;
-        default:
-          out.println("지원하지 않는 명령어입니다.");
-        }
-      } catch (IndexOutOfBoundsException e) {
-        out.println("인덱스가 유효하지 않습니다.");
-      } catch (Exception e) {
-        out.println("실행 중 오류가 발생했습니다.");
-        e.printStackTrace();
-      } // try
-    } // while
+        // 클라이언트가 보낸 데이터 읽기
+        String[] commands = in.nextLine().split("\\?");
+
+        try {
+          switch (commands[0]) {
+          case "add": this.doAdd(commands[1]); break;
+          case "list": this.doList(); break;
+          case "view": this.doView(commands[1]); break;
+          case "delete": this.doDelete(commands[1]); break;
+          case "update": this.doUpdate(commands[1]); break;
+          case "main": break loop;
+          default:
+            out.println("지원하지 않는 명령어입니다.");
+          }
+        } catch (IndexOutOfBoundsException e) {
+          out.println("인덱스가 유효하지 않습니다.");
+        } catch (Exception e) {
+          out.println("실행 중 오류가 발생했습니다.");
+          e.printStackTrace();
+        } // try
+      } // while
   }
 
- 
+
   // 아래 doXxx() 메서드들은 오직 service()에서만 호출하기 때문에
   // private으로 접근을 제한한다.
   private void doList() {
@@ -117,28 +117,23 @@ public class ContactController {
   // 단 이메일은 변경할 수 없다.
   private void doUpdate(String params) {
     HashMap<String,String> paramMap = commandSplit(params);
-    
+
     if (!existEmail(paramMap.get("email"))) {
       out.println("해당하는 이메일이 존재하지 않습니다. 업데이트를 취소합니다.");
       return;
     }
 
-    Contact newContact = new Contact();
-    newContact.setName(paramMap.get("name"));
-    newContact.setPosition(paramMap.get("position"));
-    newContact.setTel(paramMap.get("tel"));
-    newContact.setEmail(paramMap.get("email"));
-    
-    for (int i = 0; i < list.size(); i++) {
-      Contact contact = list.get(i);
+    for (Contact contact : list) {
       if (contact.getEmail().equals(paramMap.get("email"))) {
-        list.set(i, newContact);
+        contact.setName(paramMap.get("name"));
+        contact.setPosition(paramMap.get("position"));
+        contact.setTel(paramMap.get("tel"));
         out.println("업데이트를 완료하였습니다.");
       }
     }
   }
 
-  
+
   // 클라이언트에서 보낸 데이터 형식
   // add?name=홍길동&position=대리&tel=111-1111&email=hong@test.com
   // doAdd("name=홍길동&position=대리&tel=111-1111&email=hong@test.com");
@@ -176,10 +171,11 @@ public class ContactController {
   // view?name=홍길동
   private void doView(String params) {
     HashMap<String,String> paramMap = commandSplit(params);
-    
+
     for (Contact contact : list) {
       if (contact.getName().equals(paramMap.get("name"))) {
         out.println("---------------------------");
+
         out.printf("이름: %s\n", contact.getName());
         out.printf("직위: %s\n", contact.getPosition());
         out.printf("전화: %s\n", contact.getTel());
@@ -187,28 +183,29 @@ public class ContactController {
       }
     }
   }
-  
+
   // 클라이언트에서 보낸 데이터 형식
   // delete?email=hong@test.com
   private void doDelete(String params) { //마지막 버전
     HashMap<String,String> paramMap = commandSplit(params);
     Contact deletedContact = null;
-    
+
     for (Contact contact : list) {
       if (contact.getEmail().equals(paramMap.get("email"))) {
         deletedContact = contact;
       }
     }
-    
+
     if (deletedContact != null) {
       list.remove(deletedContact);
+
       changed = true;
       out.println("삭제하였습니다.");      
     } else {
       out.println("일치하는 이메일이 존재하지 않습니다.");
     }
   }
-  
+
   private ArrayList<Contact> searchByName(String name) {
     ArrayList<Contact> searchList = new ArrayList<>();
     for (Contact contact : list) {
@@ -218,7 +215,7 @@ public class ContactController {
     }
     return searchList;
   }
-  
+
 
   private HashMap<String,String> commandSplit(String params) {
     String[] values = params.split("&");
