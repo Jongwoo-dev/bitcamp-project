@@ -1,3 +1,18 @@
+[v1.7]
+구현할 기능:
+=> EduAppServer.java 코드 정리
+   - static 멤버 대신 instantce
+
+산출물:
+=>
+
+학습목표:
+=> 
+=> 
+
+
+
+
 
 
 [v1.6]

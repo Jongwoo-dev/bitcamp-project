@@ -4,36 +4,36 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 
-import bitcamp.java89.ems.server.controller.ClassroomController;
 import bitcamp.java89.ems.server.controller.ContactController;
-import bitcamp.java89.ems.server.controller.StudentController;
 import bitcamp.java89.ems.server.controller.TeacherController;
-import bitcamp.java89.ems.server.controller.TextBookController;
 
 public class EduAppServer {
-  static Scanner in;
-  static PrintStream out;
+  private Scanner in;
+  private PrintStream out;
 
-  static Scanner keyScan = new Scanner(System.in);
-  static TeacherController teacherController;
-  static ContactController contactController;
+  private Scanner keyScan = new Scanner(System.in);
+  private TeacherController teacherController;
+  private ContactController contactController;
 
   public static void main(String[] args) throws Exception {
+    EduAppServer eduAppServer = new EduAppServer();
+    eduAppServer.service();
+  }
+
+  private void service() throws IOException {
     ServerSocket ss = new ServerSocket(8888);
     System.out.println("서버 실행 중...");
 
     while (true) {
       processRequest(ss.accept());
     }
-    //ss.close();
   }
 
-  private static void processRequest(Socket socket) {
+  private void processRequest(Socket socket) {
     try {
       System.out.println("클라이언트 연결");
       in = new Scanner(new BufferedInputStream(socket.getInputStream()), "UTF-8");
@@ -82,7 +82,7 @@ public class EduAppServer {
     }
   }
 
-  static void doMenu() {
+  private void doMenu() {
     out.println("[메뉴]");
     out.println("1. 강사관리");
     //out.println("2. 학생관리");
@@ -95,7 +95,7 @@ public class EduAppServer {
     out.println("quit   프로그램 종료");
   }
 
-  static boolean doQuit() {
+  private boolean doQuit() {
     boolean changed = teacherController.isChanged();
     if (changed) {
       doSave();
@@ -104,7 +104,7 @@ public class EduAppServer {
     return true;
   } 
 
-  static void doSave() {
+  private void doSave() {
     try {
       teacherController.save();
     } catch (Exception e) {
