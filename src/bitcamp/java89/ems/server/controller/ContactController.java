@@ -66,34 +66,34 @@ public class ContactController {
     out0.close();
   }
 
-  public void service() {
-    loop:
-      while (true) {
-        // 클라이언트로 데이터 출력
-        out.println("연락처관리> ");
-        out.println();  // 보내는 데이터의 끝을 의미
+  public boolean service() {
+    while (true) {
+      // 클라이언트로 데이터 출력
+      out.println("연락처관리> ");
+      out.println();  // 보내는 데이터의 끝을 의미
 
-        // 클라이언트가 보낸 데이터 읽기
-        String[] commands = in.nextLine().split("\\?");
+      // 클라이언트가 보낸 데이터 읽기
+      String[] commands = in.nextLine().split("\\?");
 
-        try {
-          switch (commands[0]) {
-          case "add": this.doAdd(commands[1]); break;
-          case "list": this.doList(); break;
-          case "view": this.doView(commands[1]); break;
-          case "delete": this.doDelete(commands[1]); break;
-          case "update": this.doUpdate(commands[1]); break;
-          case "main": break loop;
-          default:
-            out.println("지원하지 않는 명령어입니다.");
-          }
-        } catch (IndexOutOfBoundsException e) {
-          out.println("인덱스가 유효하지 않습니다.");
-        } catch (Exception e) {
-          out.println("실행 중 오류가 발생했습니다.");
-          e.printStackTrace();
-        } // try
-      } // while
+      try {
+        switch (commands[0]) {
+        case "add": this.doAdd(commands[1]); break;
+        case "list": this.doList(); break;
+        case "view": this.doView(commands[1]); break;
+        case "delete": this.doDelete(commands[1]); break;
+        case "update": this.doUpdate(commands[1]); break;
+        case "main": return true;
+        case "quit": return false;
+        default:
+          out.println("지원하지 않는 명령어입니다.");
+        }
+      } catch (IndexOutOfBoundsException e) {
+        out.println("인덱스가 유효하지 않습니다.");
+      } catch (Exception e) {
+        out.println("실행 중 오류가 발생했습니다.");
+        e.printStackTrace();
+      } // try
+    } // while
   }
 
 
@@ -118,19 +118,17 @@ public class ContactController {
   private void doUpdate(String params) {
     HashMap<String,String> paramMap = commandSplit(params);
 
-    if (!existEmail(paramMap.get("email"))) {
-      out.println("해당하는 이메일이 존재하지 않습니다. 업데이트를 취소합니다.");
-      return;
-    }
-
     for (Contact contact : list) {
       if (contact.getEmail().equals(paramMap.get("email"))) {
         contact.setName(paramMap.get("name"));
         contact.setPosition(paramMap.get("position"));
         contact.setTel(paramMap.get("tel"));
         out.println("업데이트를 완료하였습니다.");
+        changed = true;
+        return;
       }
     }
+    out.println("해당하는 이메일이 존재하지 않습니다. 업데이트를 취소합니다.");
   }
 
 
@@ -166,14 +164,13 @@ public class ContactController {
   }
 
 
-
   // 클라이언트에서 보낸 데이터 형식
   // view?name=홍길동
   private void doView(String params) {
-    HashMap<String,String> paramMap = commandSplit(params);
+    String[] kv = params.split("=");
 
     for (Contact contact : list) {
-      if (contact.getName().equals(paramMap.get("name"))) {
+      if (contact.getName().equals(kv[1])) {
         out.println("---------------------------");
 
         out.printf("이름: %s\n", contact.getName());
@@ -187,23 +184,18 @@ public class ContactController {
   // 클라이언트에서 보낸 데이터 형식
   // delete?email=hong@test.com
   private void doDelete(String params) { //마지막 버전
-    HashMap<String,String> paramMap = commandSplit(params);
-    Contact deletedContact = null;
+    String[] kv = params.split("=");
 
-    for (Contact contact : list) {
-      if (contact.getEmail().equals(paramMap.get("email"))) {
-        deletedContact = contact;
+    for (int i = 0; i < list.size(); i++) {
+      Contact contact = list.get(i);
+      if (contact.getEmail().equals(kv[1])) {
+        list.remove(i);
+        changed = true;
+        out.println("삭제하였습니다.");     
+        return;
       }
     }
-
-    if (deletedContact != null) {
-      list.remove(deletedContact);
-
-      changed = true;
-      out.println("삭제하였습니다.");      
-    } else {
-      out.println("일치하는 이메일이 존재하지 않습니다.");
-    }
+    out.println("일치하는 이메일이 존재하지 않습니다.");
   }
 
   private HashMap<String,String> commandSplit(String params) {
