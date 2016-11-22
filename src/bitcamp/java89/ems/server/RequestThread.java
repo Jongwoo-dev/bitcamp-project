@@ -87,10 +87,7 @@ public class RequestThread extends Thread{
   }
 
   private boolean doQuit() {
-    boolean changed = teacherController.isChanged();
-    if (changed) {
-      doSave();
-    }
+    doSave();
     System.out.println("클라이언트 연결 종료");
     return true;
   } 
