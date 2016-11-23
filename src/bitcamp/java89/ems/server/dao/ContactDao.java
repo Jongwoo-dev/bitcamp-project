@@ -3,6 +3,7 @@ package bitcamp.java89.ems.server.dao;
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ public class ContactDao {
   private boolean changed;
 
   private ContactDao() {
-    //list = new ArrayList<Contact>();
     this.load(); 
   }
   
@@ -32,7 +32,7 @@ public class ContactDao {
   }
 
   @SuppressWarnings("unchecked")
-  private void load() {
+  synchronized private void load() {
     //파일에서 정보 읽어오는 메소드
     FileInputStream in0 = null;
     ObjectInputStream in = null;
@@ -46,14 +46,11 @@ public class ContactDao {
       System.out.println("연락처 데이터 로딩 중 오류 발생!");
       list = new ArrayList<Contact>();
     } finally {
-      try {
-        in.close();
-        in0.close();
-      } catch (Exception e) {
-      }
+      try {in.close();} catch (Exception e) {}
+      try {in0.close();} catch (IOException e) {}
     }
   }
-
+  
   synchronized public void save() throws Exception {
     // 파일에 저장한다.
     FileOutputStream out0 = new FileOutputStream(this.filename);
