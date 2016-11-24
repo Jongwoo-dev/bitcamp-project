@@ -21,11 +21,6 @@ public class TeacherController {
     teacherDao = TeacherDao.getInstance(); 
   }
 
-  public void save() throws Exception {
-    if (teacherDao.isChanged()) {
-      teacherDao.save();
-    }
-  }
 
   public boolean service() {
     while (true) {
