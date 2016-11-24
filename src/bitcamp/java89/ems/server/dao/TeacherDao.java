@@ -41,7 +41,7 @@ public class TeacherDao {
     }
   }
 
-  public void save() throws Exception {
+  synchronized public void save() throws Exception {
     // 파일에 저장한다.
     try (
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(this.filename)); ) {
