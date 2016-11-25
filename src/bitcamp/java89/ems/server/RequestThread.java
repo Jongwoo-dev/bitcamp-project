@@ -7,9 +7,6 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import bitcamp.java89.ems.server.dao.ContactDao;
-import bitcamp.java89.ems.server.dao.TeacherDao;
-
 public class RequestThread extends Thread{
   private Socket socket;
   private Scanner in;

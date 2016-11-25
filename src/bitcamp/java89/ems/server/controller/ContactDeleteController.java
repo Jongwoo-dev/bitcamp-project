@@ -4,7 +4,6 @@ import java.io.PrintStream;
 import java.util.HashMap;
 
 import bitcamp.java89.ems.server.AbstractCommand;
-import bitcamp.java89.ems.server.Command;
 import bitcamp.java89.ems.server.dao.ContactDao;
 
 public class ContactDeleteController extends AbstractCommand {
