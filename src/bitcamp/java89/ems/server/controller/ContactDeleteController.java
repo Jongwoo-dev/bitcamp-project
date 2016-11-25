@@ -7,7 +7,11 @@ import bitcamp.java89.ems.server.AbstractCommand;
 import bitcamp.java89.ems.server.dao.ContactDao;
 
 public class ContactDeleteController extends AbstractCommand {
-
+  @Override
+  public String getCommandString() {
+    return "contact/delete";
+  }
+  
   // contact/delete?email=hong@test.com
   @Override
   protected void doResponse(HashMap<String,String> paramMap, PrintStream out) throws Exception {

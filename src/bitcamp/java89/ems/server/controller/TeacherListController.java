@@ -9,7 +9,11 @@ import bitcamp.java89.ems.server.dao.TeacherDao;
 import bitcamp.java89.ems.server.vo.Teacher;
 
 public class TeacherListController extends AbstractCommand {
-
+  @Override
+  public String getCommandString() {
+    return "teacher/list";
+  }
+  
   @Override
   protected void doResponse(HashMap<String,String> paramMap, PrintStream out) throws Exception {
     TeacherDao teacherDao = TeacherDao.getInstance();

@@ -7,7 +7,11 @@ import bitcamp.java89.ems.server.AbstractCommand;
 import bitcamp.java89.ems.server.dao.TeacherDao;
 
 public class TeacherDeleteController extends AbstractCommand {
-
+  @Override
+  public String getCommandString() {
+    return "teacher/delete";
+  }
+  
   @Override
   protected void doResponse(HashMap<String,String> paramMap, PrintStream out) throws Exception {
     TeacherDao teacherDao = TeacherDao.getInstance();

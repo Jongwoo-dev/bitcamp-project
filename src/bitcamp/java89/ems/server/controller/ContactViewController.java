@@ -9,7 +9,11 @@ import bitcamp.java89.ems.server.dao.ContactDao;
 import bitcamp.java89.ems.server.vo.Contact;
 
 public class ContactViewController extends AbstractCommand {
-
+  @Override
+  public String getCommandString() {
+    return "contact/view";
+  }
+  
   //view?name=홍길동
   @Override
   protected void doResponse(HashMap<String,String> paramMap, PrintStream out) throws Exception {
