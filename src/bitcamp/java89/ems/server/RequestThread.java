@@ -7,6 +7,9 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import bitcamp.java89.ems.server.dao.ContactDao;
+import bitcamp.java89.ems.server.dao.TeacherDao;
+
 public class RequestThread extends Thread{
   private Socket socket;
   private Scanner in;
@@ -29,7 +32,7 @@ public class RequestThread extends Thread{
       out = new PrintStream(new BufferedOutputStream(socket.getOutputStream()), true, "UTF-8");
 
       out.println("비트캠프 관리시스템에 오신걸 환영합니다.");
-
+      
       while (true) {
         out.println("명령> ");
         out.println();

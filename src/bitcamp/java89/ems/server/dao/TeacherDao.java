@@ -1,55 +1,22 @@
 package bitcamp.java89.ems.server.dao;
 
-import java.io.EOFException;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import bitcamp.java89.ems.server.vo.Teacher;
 
-public class TeacherDao {
+public class TeacherDao extends AbstractDao<Teacher> {
   static TeacherDao obj;
-  private String filename = "teacher-v1.8.data";
-  private ArrayList<Teacher> list;
-
-  private TeacherDao() {
-    this.load();  // 기존의 데이터 파일을 읽어서 ArrayList에 학생 정보를 로딩한다. 
-  }
   
-  public static TeacherDao getInstance() {
+  public static TeacherDao getInstance() throws Exception {
     if (obj == null) {
       obj = new TeacherDao();
+      obj.load();  // 기존의 데이터 파일을 읽어서 ArrayList에 학생 정보를 로딩한다. 
     }
     return obj;
   }
 
-  @SuppressWarnings("unchecked")
-  private void load() {
-    //파일에서 정보 읽어오는 메소드
-    try (
-        ObjectInputStream in = new ObjectInputStream(new FileInputStream(this.filename));){
-      
-      list = (ArrayList<Teacher>)in.readObject();
-      
-    } catch (EOFException e) {
-      // 파일을 모두 읽었다.
-    } catch (Exception e) {
-      System.out.println("강사 데이터 로딩 중 오류 발생!");
-      list = new ArrayList<Teacher>();
-    }
-  }
-
-  synchronized public void save() throws Exception {
-    // 파일에 저장한다.
-    try (
-        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(this.filename)); ) {
-
-    out.writeObject(list);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+  private TeacherDao() throws Exception {
+    super("teacher-v1.9.data");
   }
 
   public ArrayList<Teacher> getList() {
