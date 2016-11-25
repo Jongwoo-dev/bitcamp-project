@@ -33,6 +33,9 @@ public class RequestThread extends Thread{
 
       out.println("비트캠프 관리시스템에 오신걸 환영합니다.");
       
+      //try{ContactDao.getInstance();}catch (Exception e){}
+      //try{TeacherDao.getInstance();}catch (Exception e){}
+      
       while (true) {
         out.println("명령> ");
         out.println();
