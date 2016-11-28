@@ -5,19 +5,6 @@ import java.util.ArrayList;
 import bitcamp.java89.ems.server.vo.Teacher;
 
 public class TeacherDao extends AbstractDao<Teacher> {
-  static TeacherDao obj;
-  
-  public static TeacherDao getInstance() throws Exception {
-    if (obj == null) {
-      obj = new TeacherDao();
-      obj.load();  // 기존의 데이터 파일을 읽어서 ArrayList에 학생 정보를 로딩한다. 
-    }
-    return obj;
-  }
-
-  private TeacherDao() throws Exception {
-    super("teacher-v1.9.data");
-  }
 
   public ArrayList<Teacher> getList() {
     return this.list;

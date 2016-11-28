@@ -5,7 +5,7 @@ import java.io.FileFilter;
 import java.util.ArrayList;
 
 public class ReflectionUtil {
-  public static void getCommandClasses(File dir, ArrayList<Class> classList) {
+  public static void getCommandClasses(File dir, ArrayList<Class<?>> classList) {
     if (!dir.isDirectory()) {
       return;
     }
@@ -35,11 +35,11 @@ public class ReflectionUtil {
         try {
           // "패키지명 + "클래스명"에 해당하는 클래스 파일을 찾아서 Method Area 영역에 로딩한다.
           // => 리턴 값은 클래스 정보이다.
-          Class c = Class.forName(path.substring(pos + 5).replaceAll("/", "."));
+          Class<?> c = Class.forName(path.substring(pos + 5).replaceAll("/", "."));
           //System.out.println(c.getName());
           
           //로딩된 클래스가 AbstractCommand를 상속 받았는지 검사한다.
-          Class superClass = c.getSuperclass();
+          Class<?> superClass = c.getSuperclass();
           if (superClass == AbstractCommand.class) {
             //System.out.println("=>>>" + c.getName());
             classList.add(c); // AbstractCommand의 서브 클래스라면 목록에 저장한다.
