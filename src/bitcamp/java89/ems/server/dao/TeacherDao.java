@@ -8,7 +8,7 @@ public class TeacherDao extends AbstractDao<Teacher> {
   
   public TeacherDao() throws Exception {
     this.setFilename("teacher-v1.9.data");
-    this.load();
+    try {this.load();} catch (Exception e) {}
   }
 
   public ArrayList<Teacher> getList() {
