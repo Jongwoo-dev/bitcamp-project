@@ -4,9 +4,11 @@ import java.io.PrintStream;
 import java.util.HashMap;
 
 import bitcamp.java89.ems.server.AbstractCommand;
+import bitcamp.java89.ems.server.annotation.Component;
 import bitcamp.java89.ems.server.dao.TeacherDao;
 import bitcamp.java89.ems.server.vo.Teacher;
 
+@Component(value="teacher/add") // ApplicationContext가 관리하는 대상 클래스임을 표시한다.
 public class TeacherAddController extends AbstractCommand {
   // 의존 객체 DAO를 저장할 변수 선언
   TeacherDao teacherDao;
@@ -14,11 +16,6 @@ public class TeacherAddController extends AbstractCommand {
   // 의존 객체 주입할 때 호출할 셋터 추가.
   public void setTeacherDao(TeacherDao teacherDao) {
     this.teacherDao = teacherDao;
-  }
-  
-  @Override
-  public String getCommandString() {
-    return "teacher/add";
   }
   
   // teacher/add?userid=hong2&password=1234&name=홍길동&email=hong@test.com&tel=111-1111&age=39&subject=자바&carrer=10&salary=8500&address=서울
