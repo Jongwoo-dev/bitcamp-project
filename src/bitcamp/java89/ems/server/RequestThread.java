@@ -7,17 +7,19 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import bitcamp.java89.ems.server.context.ApplicationContext;
+
 public class RequestThread extends Thread{
   private Socket socket;
   private Scanner in;
   private PrintStream out;
 
   //private Scanner keyScan = new Scanner(System.in);
-  private HashMap<String,Command> commandMap;
+  private ApplicationContext appContext;
   
-  public RequestThread(Socket socket, HashMap<String,Command> commandMap) {
+  public RequestThread(Socket socket, ApplicationContext appContext) {
     this.socket = socket;
-    this.commandMap = commandMap;
+    this.appContext = appContext;
   }
   
   @Override
@@ -29,9 +31,6 @@ public class RequestThread extends Thread{
       out = new PrintStream(new BufferedOutputStream(socket.getOutputStream()), true, "UTF-8");
 
       out.println("비트캠프 관리시스템에 오신걸 환영합니다.");
-      
-      //try{ContactDao.getInstance();}catch (Exception e){}
-      //try{TeacherDao.getInstance();}catch (Exception e){}
       
       while (true) {
         out.println("명령> ");
@@ -50,7 +49,7 @@ public class RequestThread extends Thread{
           }
         }
 
-        Command commandHandler = commandMap.get(command[0]);
+        Command commandHandler = (Command)appContext.getBean(command[0]);
 
         if (commandHandler == null) {
           if (command[0].equals("quit")) {

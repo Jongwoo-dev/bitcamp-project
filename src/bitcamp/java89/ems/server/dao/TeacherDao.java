@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import bitcamp.java89.ems.server.vo.Teacher;
 
 public class TeacherDao extends AbstractDao<Teacher> {
+  
+  public TeacherDao() throws Exception {
+    this.setFilename("teacher-v1.9.data");
+    this.load();
+  }
 
   public ArrayList<Teacher> getList() {
     return this.list;
