@@ -4,11 +4,12 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import bitcamp.java89.ems.server.annotation.RequestMapping;
+import bitcamp.java89.ems.server.annotation.RequestParam;
 import bitcamp.java89.ems.server.context.RequestHandlerMapping;
 import bitcamp.java89.ems.server.context.RequestHandlerMapping.RequestHandler;
 
@@ -42,13 +43,13 @@ public class RequestThread extends Thread{
         // 클라이언트가 보낸 명령문을 분석하여 명령어와 파라미터로 분리한다.
         String[] command = in.nextLine().split("\\?");
 
-        HashMap<String,String> paramMap = new HashMap<>();
+        HashMap<String,String> dataMap = new HashMap<>();
         // 파라미터를 분석하여 HashMap에 보관한다.
         if (command.length == 2) {
           String[] params = command[1].split("&");
           for (String value : params) {
             String[] kv = value.split("=");
-            paramMap.put(kv[0], kv[1]);
+            dataMap.put(kv[0], kv[1]);
           }
         }
 
@@ -65,7 +66,7 @@ public class RequestThread extends Thread{
         
         // 클라이언트가 보낸 명령을 처리할 객체가 있다면, 작업을 실행한다.
         try {
-          requestHandler.method.invoke(requestHandler.obj, paramMap, out);
+          requestHandler.method.invoke(requestHandler.obj, getArguments(requestHandler.method, dataMap, requestHandler));
           
         } catch (Exception e) {
           out.println("작업 중 오류가 발생했습니다.");
@@ -80,6 +81,41 @@ public class RequestThread extends Thread{
       try {out.close();} catch (Exception e) {}
       try {socket.close();} catch (Exception e) {}      
     }
+  }
+
+  private Object[] getArguments(Method method, HashMap<String, String> dataMap, RequestHandler requestHandler) {
+    // 호출할 메서드의 파라미터 정보를 추출한다.
+    Parameter[] params = method.getParameters();
+    
+    // 파라미터 값을 저장할 배열을 준비한다.
+    Object[] args = new Object[params.length];
+    
+    // 파라미터 정보를꺼내서 그에 맞는 값을 준비한다.
+    for (int i = 0; i < params.length; i++) {
+      // 파라미터에 @RequestParam 이라는 애노테이션이 붙은 경우
+      RequestParam anno = params[i].getAnnotation(RequestParam.class);
+      if (anno != null) {
+        String value = anno.value();
+        if (params[i].getType() == int.class) {
+          args[i] = Integer.parseInt(dataMap.get(value));
+        } else if (params[i].getType() == boolean.class) {
+          args[i] = Boolean.parseBoolean(dataMap.get(value));
+        } else if (params[i].getType() == String.class) {
+          args[i] = dataMap.get(value);                
+        } else {
+          args[i] = null;
+        }
+      } else {
+        if (params[i].getType() == PrintStream.class) {
+          args[i] = out;
+        } else if (params[i].getType() == HashMap.class) {
+          args[i] = dataMap;
+        } else {
+          args[i] = null;
+        }
+      }
+    }
+    return args;
   }
 
   private boolean doQuit() {
