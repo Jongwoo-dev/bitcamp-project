@@ -6,6 +6,7 @@ DBMS를 이용하여 데이터를 관리한다.
     해당 폴더에 JDBC 드라이버 파일을 둔다.
   - Java Build Path에 이 드라이버의 경로를 추가한다.
 - DAO 클래스 변경
+  - AbstractDao.java (삭제)
   - ContactDao.java (변경)
   - TeacherDao.java (변경)
 
