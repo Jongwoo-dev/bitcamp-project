@@ -93,6 +93,7 @@ public class ApplicationContext {
     for (Class<?> clazz : classList) {
       try {
         Object obj = clazz.newInstance();
+        System.out.println("객체 생성 : " + clazz.getName());
         
         // 클래스에 태깅된 Component 애노테이션 정보를 꺼낸다.
         Component compAnno = clazz.getAnnotation(Component.class);

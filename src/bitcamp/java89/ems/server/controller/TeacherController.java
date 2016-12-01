@@ -2,25 +2,24 @@ package bitcamp.java89.ems.server.controller;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import bitcamp.java89.ems.server.annotation.Component;
 import bitcamp.java89.ems.server.annotation.RequestMapping;
 import bitcamp.java89.ems.server.annotation.RequestParam;
-import bitcamp.java89.ems.server.dao.TeacherFileDao;
+import bitcamp.java89.ems.server.dao.TeacherDao;
 import bitcamp.java89.ems.server.vo.Teacher;
 
 @Component // ApplicationContext가 관리하는 대상 클래스임을 표시한다.
 public class TeacherController {
   // 의존 객체 DAO를 저장할 변수 선언
-  TeacherFileDao teacherDao;
+  TeacherDao teacherDao;
 
   // 의존 객체 주입할 때 호출할 셋터 추가.
-  public void setTeacherDao(TeacherFileDao teacherDao) {
+  public void setTeacherDao(TeacherDao teacherDao) {
     this.teacherDao = teacherDao;
   }
 
-  // teacher/add?userid=hong2&password=1234&name=홍길동&email=hong@test.com&tel=111-1111&age=39&subject=자바&carrer=10&salary=8500&address=서울
+  // teacher/add?userid=hong2&password=1234&name=홍길동&email=hong2@test.com&tel=111-1111&age=39&subject=자바&carrer=10&salary=8500&address=서울
   @RequestMapping(value="teacher/add")
   public void add(
       @RequestParam("userid") String userId,
@@ -120,7 +119,7 @@ public class TeacherController {
     out.println("변경하였습니다.");
   }
 
-  //teacher/view?userid=hong2
+  // teacher/view?userid=hong2
   @RequestMapping(value="teacher/view")
   public void view(@RequestParam("userid") String userId, PrintStream out) throws Exception {
     // 주입 받은 teacherDao를 사용할 것이기 때문에
