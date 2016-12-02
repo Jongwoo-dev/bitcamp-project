@@ -7,22 +7,16 @@ import java.util.ArrayList;
 
 import bitcamp.java89.ems.server.annotation.Component;
 import bitcamp.java89.ems.server.dao.TeacherDao;
+import bitcamp.java89.ems.server.util.DataSource;
 import bitcamp.java89.ems.server.vo.Teacher;
 
 @Component  // ApplicationContext가 관리하는 클래스임을 표시하기 위해 태그를 단다.
 public class TeacherMysqlDao extends AbstractFileDao<Teacher> implements TeacherDao {
-  Connection con;
-  
-  // Connection 객체를 외부에서 주입 받는다.
-  public void setConnection(Connection con) {
-    this.con = con;
-  }
-
-  public TeacherMysqlDao() throws Exception {
-  }
+  DataSource ds;
 
   public ArrayList<Teacher> getList() throws Exception {
     ArrayList<Teacher> list = new ArrayList<>();
+    Connection con = ds.getConnection();  // 커넥션풀에서 한 개의 Connection 객체를 임대한다.
     try (
         PreparedStatement stmt = con.prepareStatement(
             "select userid, password, name, tel, email, age, subject, carrer, salary, address from ex_teachers");
@@ -43,12 +37,15 @@ public class TeacherMysqlDao extends AbstractFileDao<Teacher> implements Teacher
 
         list.add(teacher);
       }
+    } finally {
+      ds.returnConnection(con);
     }
     return list;
   }
 
   public ArrayList<Teacher> getListByUserId(String userId) throws Exception {
     ArrayList<Teacher> list = new ArrayList<>();
+    Connection con = ds.getConnection();  // 커넥션풀에서 한 개의 Connection 객체를 임대한다.
     try (
         PreparedStatement stmt = con.prepareStatement(
             "select userid, password, name, tel, email, age, subject, carrer, salary, address"
@@ -72,11 +69,14 @@ public class TeacherMysqlDao extends AbstractFileDao<Teacher> implements Teacher
         list.add(teacher);
       }
       rs.close();
+    } finally {
+      ds.returnConnection(con);
     }
     return list;
   }
 
   public void insert(Teacher teacher) throws Exception {
+    Connection con = ds.getConnection();  // 커넥션풀에서 한 개의 Connection 객체를 임대한다.
     try (
         PreparedStatement stmt = con.prepareStatement(
             "insert into ex_teachers(userid,password,name,tel,email,age,subject,carrer,"
@@ -95,10 +95,13 @@ public class TeacherMysqlDao extends AbstractFileDao<Teacher> implements Teacher
 
 
       stmt.executeUpdate();
-    } 
+    } finally {
+      ds.returnConnection(con);
+    }
   }
 
   public void update(Teacher teacher) throws Exception {
+    Connection con = ds.getConnection();  // 커넥션풀에서 한 개의 Connection 객체를 임대한다.
     try (
         PreparedStatement stmt = con.prepareStatement(
             "update ex_teachers set password=?,name=?,tel=?,email=?,age=?,subject=?,carrer=?,"
@@ -116,10 +119,13 @@ public class TeacherMysqlDao extends AbstractFileDao<Teacher> implements Teacher
       stmt.setString(10, teacher.getUserId());
 
       stmt.executeUpdate();
-    } 
+    } finally {
+      ds.returnConnection(con);
+    }
   }
 
   public void delete(String userId) throws Exception {
+    Connection con = ds.getConnection();  // 커넥션풀에서 한 개의 Connection 객체를 임대한다.
     try (
         PreparedStatement stmt = con.prepareStatement(
             "delete from ex_teachers where userid=?"); ) {
@@ -127,10 +133,13 @@ public class TeacherMysqlDao extends AbstractFileDao<Teacher> implements Teacher
       stmt.setString(1, userId);
 
       stmt.executeUpdate();
-    } 
+    } finally {
+      ds.returnConnection(con);
+    }
   }
 
   public boolean existUserId(String userId) throws Exception {
+    Connection con = ds.getConnection();  // 커넥션풀에서 한 개의 Connection 객체를 임대한다.
     try (
         PreparedStatement stmt = con.prepareStatement(
             "select * from ex_teachers where userid=?"); ){
@@ -145,6 +154,8 @@ public class TeacherMysqlDao extends AbstractFileDao<Teacher> implements Teacher
         rs.close();
         return false;
       }
+    } finally {
+      ds.returnConnection(con);
     }
   }
 }
