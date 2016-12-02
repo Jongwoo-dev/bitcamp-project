@@ -14,6 +14,10 @@ import bitcamp.java89.ems.server.vo.Teacher;
 public class TeacherMysqlDao extends AbstractFileDao<Teacher> implements TeacherDao {
   DataSource ds;
 
+  public void setDataSource(DataSource dataSource) {
+    this.ds = dataSource;
+  }
+  
   public ArrayList<Teacher> getList() throws Exception {
     ArrayList<Teacher> list = new ArrayList<>();
     Connection con = ds.getConnection();  // 커넥션풀에서 한 개의 Connection 객체를 임대한다.
