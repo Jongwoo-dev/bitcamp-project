@@ -5,18 +5,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import bitcamp.java89.ems.server.annotation.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import bitcamp.java89.ems.server.dao.ContactDao;
 import bitcamp.java89.ems.server.util.DataSource;
 import bitcamp.java89.ems.server.vo.Contact;
 
 @Component  // ApplicationContext가 관리하는 클래스임을 표시하기 위해 태그를 단다.
 public class ContactMysqlDao implements ContactDao {
-  DataSource ds;
-
-  public void setDataSource(DataSource dataSource) {
-    this.ds = dataSource;
-  }
+  @Autowired DataSource ds;
 
   public ArrayList<Contact> getList() throws Exception {
     ArrayList<Contact> list = new ArrayList<>();
